@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUST Catering</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylecart.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="logo-title">
+                <img src="{{ url_for('static', filename='images/mustlogotransparent.png') }}" alt="logo" class="logo">
+                <h1 class="site-title">MUST Catering</h1>
+            </div>
+
+            <!--cart icon -->
+            <div class="header-actions" style="display: flex; align-items: center; gap: 15px;">
+              <a href="{{ url_for('home') }}" class="back-button">
+                <span class="pointing-finger">👈</span> Back to Menu
+              </a>
+              
+              <!-- Profile Icon with Login Status -->
+              <div class="profile-container" style="position: relative;">
+                {% if is_logged_in %}
+                  <div class="profile-dropdown" style="position: relative;">
+                    <button class="profile-icon-btn" onclick="toggleProfileMenu()" style="background: none; border: none; cursor: pointer; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" title="Profile">
+                      <i class="fas fa-user-circle" style="font-size: 28px; color: #10b981;"></i>
+                    </button>
+                    <div id="profile-menu" class="profile-menu" style="display: none; position: absolute; right: 0; top: 45px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 180px; z-index: 1000; overflow: hidden;">
+                      <div style="padding: 12px 16px; border-bottom: 1px solid #e5e7eb;">
+                        <div style="font-weight: 600; color: #1f2937; font-size: 0.9rem;">Logged in</div>
+                        <div style="font-size: 0.8rem; color: #6b7280; margin-top: 4px;">{{ session.get('user', 'User') }}</div>
+                      </div>
+                      <a href="{{ url_for('logout') }}" style="display: block; padding: 12px 16px; color: #ef4444; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: background 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='white'">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i> Logout
+                      </a>
+                    </div>
+                  </div>
+                {% else %}
+                  <button class="profile-icon-btn" onclick="document.getElementById('login-modal').style.display='flex'" style="background: none; border: none; cursor: pointer; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" title="Login">
+                    <i class="fas fa-user-circle" style="font-size: 28px; color: #9ca3af;"></i>
+                  </button>
+                {% endif %}
+              </div>
+            </div>
+        </div>
+    </header>
+    <main class="main-section">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div id="flash-messages" style="margin-bottom: 20px;">
+                    {% for category, message in messages %}
+                        {% if category == 'error' %}
+                        <div class="flash-message" style="padding: 12px 16px; margin-bottom: 10px; border-radius: 8px; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;">
+                            {{ message }}
+                            <span onclick="this.parentElement.remove()" style="float: right; cursor: pointer; font-weight: bold;">&times;</span>
+                        </div>
+                        {% elif category == 'success' %}
+                        <div class="flash-message" style="padding: 12px 16px; margin-bottom: 10px; border-radius: 8px; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;">
+                            {{ message }}
+                            <span onclick="this.parentElement.remove()" style="float: right; cursor: pointer; font-weight: bold;">&times;</span>
+                        </div>
+                        {% else %}
+                        <div class="flash-message" style="padding: 12px 16px; margin-bottom: 10px; border-radius: 8px; background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe;">
+                            {{ message }}
+                            <span onclick="this.parentElement.remove()" style="float: right; cursor: pointer; font-weight: bold;">&times;</span>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <h2 class="selected">Here are your choices</h2>
+        <div class="cart-items" id="cart-items"></div>
+        <div class="cart-empty" id="cart-empty" style="display:none;">
+            <p>Your cart is empty!</p>
+        </div>
+        <button class="checkout-button" onclick="checkout()">
+            Proceed to pay👉
+        </button>
+    <div id="checkout-modal" class="checkout-modal">
+    <div class="checkout-content">
+        <span class="close-btn" onclick="closeCheckoutModal()">&times;</span>
+        <h2>Payment</h2>
+        <p>Please enter your details to complete payment:</p>
+        <form id="checkout-form" onsubmit="submitCheckout(event)">
+         <label for="reference">Reference Name:</label>
+        <input type="text" id="reference" name="reference" placeholder="e.g. Joel Mustafa" required>
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" placeholder="e.g. 07XXXXXXXX" pattern="[0-9]{10}" required>
+        <button type="submit" class="confirm-button">
+            Confirm Payment✅
+        </button>
+     </form>
+    </div>
+    </div>
+     </main>
+     
+     <!-- Login/Signup -->
+     <div id="login-modal" class="checkout-modal" style="display: none;">
+        <div class="checkout-content">
+            <span class="close-btn" onclick="document.getElementById('login-modal').style.display='none'">&times;</span>
+            
+            <h2 id="auth-title" style="color: #28a745; text-align: center;">Login</h2>
+            <p style="text-align: center; margin-bottom: 20px;" id="auth-subtitle">Please log in to verify your identity.</p>
+
+            <form id="auth-form" action="/login" method="POST">
+                <label for="auth-email">Email</label>
+                <input type="email" id="auth-email" name="email" placeholder="e.g. user@example.com" required 
+                       style="width: 100%; padding: 10px; margin: 5px 0 15px 0; border: 1px solid #ccc; border-radius: 5px;">
+                
+                <label for="auth-password">Password</label>
+                <input type="password" id="auth-password" name="password" placeholder="Enter Password" required 
+                       style="width: 100%; padding: 10px; margin: 5px 0 15px 0; border: 1px solid #ccc; border-radius: 5px;">
+                
+                <div id="confirm-password-group" style="display: none;">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm_password" placeholder="Re-enter password" 
+                           minlength="6"
+                           style="width: 100%; padding: 10px; margin: 5px 0 15px 0; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                
+                <div style="margin: 15px 0; padding: 12px; background: #f3f4f6; border-radius: 5px;">
+                    <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.9rem;">
+                        <input type="checkbox" id="is-admin" name="is_admin" 
+                               style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
+                        <span style="color: #1f2937;">Login as Admin</span>
+                    </label>
+                    <small style="display: block; color: #6b7280; margin-top: 4px; font-size: 0.8rem;">
+                        Check if admin
+                    </small>
+                </div>
+                
+                <button type="submit" id="auth-submit-btn" class="confirm-button" 
+                        style="width: 100%; background: #28a745; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;">
+                    <span id="auth-submit-text">Login & Continue</span>
+                </button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #666;">
+                <span id="auth-switch-text">Don't have an account?</span>
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(); return false;" style="color: #28a745; text-decoration: underline; cursor: pointer; margin-left: 5px;">Sign up</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        let isSignupMode = false;
+        
+        function toggleAuthMode() {
+            isSignupMode = !isSignupMode;
+            const form = document.getElementById('auth-form');
+            const title = document.getElementById('auth-title');
+            const subtitle = document.getElementById('auth-subtitle');
+            const submitBtn = document.getElementById('auth-submit-btn');
+            const submitText = document.getElementById('auth-submit-text');
+            const confirmGroup = document.getElementById('confirm-password-group');
+            const confirmInput = document.getElementById('confirm-password');
+            const switchText = document.getElementById('auth-switch-text');
+            const switchLink = document.getElementById('auth-switch-link');
+            
+            if (isSignupMode) {
+                form.action = '/signup';
+                title.textContent = 'Create Account';
+                title.style.color = '#007bff';
+                subtitle.textContent = 'Sign up to place orders.';
+                submitText.textContent = 'Create Account';
+                submitBtn.style.background = '#007bff';
+                confirmGroup.style.display = 'block';
+                confirmInput.required = true;
+                switchText.textContent = 'Already have an account?';
+                switchLink.textContent = 'Log in';
+            } else {
+                form.action = '/login';
+                title.textContent = 'Login';
+                title.style.color = '#28a745';
+                subtitle.textContent = 'Please log in to verify your identity.';
+                submitText.textContent = 'Login & Continue';
+                submitBtn.style.background = '#28a745';
+                confirmGroup.style.display = 'none';
+                confirmInput.required = false;
+                switchText.textContent = "Don't have an account?";
+                switchLink.textContent = 'Sign up';
+            }
+        }
+        
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profile-menu');
+            if (menu) {
+                menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+        
+        // Close profile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileContainer = document.querySelector('.profile-container');
+            const profileMenu = document.getElementById('profile-menu');
+            if (profileContainer && profileMenu && !profileContainer.contains(event.target)) {
+                profileMenu.style.display = 'none';
+            }
+        });
+    </script>
+
+<script>
+    /* serialize boolean correctly so JS gets true/false */
+    const userIsLoggedIn = {{ is_logged_in|tojson }};
+</script>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

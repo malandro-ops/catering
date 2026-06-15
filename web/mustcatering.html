@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUST Catering</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        
+        <div class="logo-title">
+            <img src="images/mustlogotransparent.png" alt="Logo" class="logo">
+            <h1 class="site-title">MUST Catering</h1>
+        </div>
+
+        <div class="header-right">
+            
+            <nav class="navbar-section">
+                <ul>
+                    <li><a href="mustcatering.html">Home</a></li>
+                    <li><a href="testimonials.html">Testimonials</a></li>
+                    <li><a href="AboutUs.html">About Us</a></li>
+                    <li><a href="Marketing.html">Marketing</a></li>
+                </ul>
+            </nav>
+
+            <a href="cart.html" class="cart-icon" aria-label="view cart">
+                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                <span id="cart-count" class="cart-count">0</span>
+            </a>
+            
+            <!-- Profile Icon with Login Status -->
+            <div class="profile-container" style="position: relative; margin-left: 15px;">
+                {% if is_logged_in %}
+                  <div class="profile-dropdown" style="position: relative;">
+                    <button class="profile-icon-btn" onclick="toggleProfileMenu()" style="background: none; border: none; cursor: pointer; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" title="Profile">
+                      <i class="fas fa-user-circle" style="font-size: 28px; color: #10b981;"></i>
+                    </button>
+                    <div id="profile-menu" class="profile-menu" style="display: none; position: absolute; right: 0; top: 45px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 180px; z-index: 1000; overflow: hidden;">
+                      <div style="padding: 12px 16px; border-bottom: 1px solid #e5e7eb;">
+                        <div style="font-weight: 600; color: #1f2937; font-size: 0.9rem;">Logged in</div>
+                        <div style="font-size: 0.8rem; color: #6b7280; margin-top: 4px;">{{ user_email }}</div>
+                      </div>
+                      <a href="/logout" style="display: block; padding: 12px 16px; color: #ef4444; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: background 0.2s;" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='white'">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i> Logout
+                      </a>
+                    </div>
+                  </div>
+                {% else %}
+                  <a href="cart.html" style="text-decoration: none;">
+                    <button class="profile-icon-btn" style="background: none; border: none; cursor: pointer; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" title="Login" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">
+                      <i class="fas fa-user-circle" style="font-size: 28px; color: #9ca3af;"></i>
+                    </button>
+                  </a>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+</header>
+
+    <main class="main-section">
+        <h2 class="greeting">Hello There👋</h2>
+        <p class="sub-text">Welcome to our MUST Cafeteria dining experience</p>
+        <p class="choose-text">Scroll down to view our menu</p>
+            <div class="menu-grid">
+            <div class="food-card" data-food-name="Chapati">
+                <div class="food-image">
+                <img src="images/chapti.jpg"/>
+                </div>
+                <h3 class="food-name">Chapati</h3>
+            <div class="food-details">
+                <span class="food-price">Ksh 10</span>
+                <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                    <i class="fas fa-box" style="margin-right: 4px;"></i>
+                    <span class="stock-count">Loading...</span>
+                </span>
+            </div>
+            <button class="add-button" onclick="addToCart('Chapati', 10)">
+                <i class="fas fa-plus"></i>
+                Add to Cart
+            </button>
+        </div>
+            <div class="food-card" data-food-name="Rice">
+                <div class="food-image">
+                    <img src="images/rice.jpg"/>
+                </div>
+                <h3 class="food-name">Rice</h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 20</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Rice', 20)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+            <div class="food-card" data-food-name="Ndengu">
+                <div class="food-image">
+                    <img src="images/ndengu.jpg"/>
+                </div>
+                <h3 class="food-name">Ndengu</h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 15</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Ndengu', 15)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+            <div class="food-card" data-food-name="Beef">
+                <div class="food-image">
+                    <img src="images/beef.jpg"/>
+                </div>
+                <h3 class="food-name">Beef</h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 35</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Beef', 35)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+            <div class="food-card" data-food-name="Beans">
+                <div class="food-image">
+                    <img src="images/beans.jpg"/>
+                </div>
+                <h3 class="food-name">Beans</h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 15</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Beans', 15)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+            <div class="food-card" data-food-name="Tea">
+                <div class="food-image">
+                    <img src="images/coffee.jpg"/>
+                </div>
+                <h3 class="food-name">Tea</h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 15</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Tea', 15)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+            <div class="food-card" data-food-name="Cabbage">
+                <div class="food-image">
+                    <img src="images/cabbage.jpg"/>
+                </div>
+                <h3 class="food-name">Cabbage
+                </h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 5</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Cabbage', 5)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+            <div class="food-card" data-food-name="Ugali">
+                <div class="food-image">
+                    <img src="images/ugali.jpg"/>
+                </div>
+                <h3 class="food-name">Ugali</h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 20</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Ugali', 20)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+            <div class="food-card" data-food-name="Sukuma Wiki">
+                <div class="food-image">
+                    <img src="images/sukuma-wiki.jpg"/>
+                </div>
+                <h3 class="food-name">Sukuma Wiki</h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 10</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Sukuma Wiki', 10)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+            <div class="food-card" data-food-name="Mandazi">
+                <div class="food-image">
+                    <img src="images/mandazi.jpg"/>
+                </div>
+                <h3 class="food-name">Mandazi</h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 10</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Mandazi', 20)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+            <div class="food-card" data-food-name="Pilau">
+                <div class="food-image">
+                    <img src="images/pilau.jpg"/>
+                </div>
+                <h3 class="food-name">Pilau</h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 70</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Pilau', 20)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+            <div class="food-card" data-food-name="Coffee">
+                <div class="food-image">
+                    <img src="images/kahawa.jpg"/>
+                </div>
+                <h3 class="food-name">Coffee</h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 15</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Coffee', 15)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+            <div class="food-card" data-food-name="Fries">
+                <div class="food-image">
+                    <img src="images/fries.jpg"/>
+                </div>
+                <h3 class="food-name">fries</h3>
+                <div class="food-details">
+                    <span class="food-price">Ksh 20</span>
+                    <span class="food-stock" style="margin-left: 10px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-box" style="margin-right: 4px;"></i>
+                        <span class="stock-count">Loading...</span>
+                    </span>
+                </div>
+                <button class="add-button" onclick="addToCart('Fries', 20)">
+                    <i class="fas fa-plus"></i>
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+        <div class="next-page">
+            <button class= "add-button" onclick="location.href='Testimonials.html'">Next</button>
+        </div>
+        <a href="https://www.must.ac.ke" target="_blank">Learn more about Meru Univeristy</a>
+    </main>
+    <script src="script.js"></script>
+    <script>
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profile-menu');
+            if (menu) {
+                menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+        
+        // Close profile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileContainer = document.querySelector('.profile-container');
+            const profileMenu = document.getElementById('profile-menu');
+            if (profileContainer && profileMenu && !profileContainer.contains(event.target)) {
+                profileMenu.style.display = 'none';
+            }
+        });
+    </script>
+</body> 
+</html>

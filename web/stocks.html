@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stocks - MUST Catering</title>
+    <link rel="stylesheet" href="stylecart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <style>
+        #login-modal {
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        #login-modal > div {
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        #profile-menu button:hover {
+            background: #f3f4f6 !important;
+        }
+        #auth-form input:focus {
+            outline: none;
+            border-color: #138808 !important;
+        }
+        #auth-submit-btn:hover {
+            background: #0b7d13 !important;
+        }
+        #profile-btn:hover {
+            background: #f0f0f0 !important;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="logo-title">
+                <img src="images/mustlogotransparent.png" alt="logo" class="logo">
+                <h1 class="site-title">MUST Catering</h1>
+            </div>
+
+            <div class="header-actions" style="display:flex;align-items:center;gap:15px;">
+              <div id="profile-section" style="display:none;">
+                <div style="position:relative;">
+                  <button id="profile-btn" onclick="toggleProfileMenu()" 
+                          style="background:white;color:#138808;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:8px;transition:all 0.2s;">
+                    <i class="fas fa-user-circle" style="font-size:1.2rem;"></i>
+                    <span id="user-email-display"></span>
+                    <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+                  </button>
+                  <div id="profile-menu" style="display:none;position:absolute;top:100%;right:0;margin-top:8px;background:white;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);min-width:180px;z-index:1001;overflow:hidden;">
+                    <button onclick="handleLogout()" 
+                            style="width:100%;padding:12px 16px;background:none;border:none;text-align:left;cursor:pointer;font-weight:600;color:#dc2626;transition:background 0.2s;display:flex;align-items:center;gap:10px;">
+                      <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div id="login-section">
+                <button onclick="showLoginModal()" 
+                        style="background:white;color:#138808;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:8px;transition:all 0.2s;">
+                  <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+              </div>
+              <a href="mustcatering.html" class="back-button">
+                <span class="pointing-finger">👈</span> Back to Menu
+              </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container main-content" style="padding:16px; display: flex; align-items: flex-start; flex-direction: column; gap:0px;">
+                <!-- Stocks -->
+        <div class="stocks-section">
+            <h2 style="margin:16px 0 20px; display:flex; align-items:center; gap:10px;">
+                <span style="font-size:1.5rem;">📊</span>
+                Food Stocks & Units Management
+            </h2>
+            <div class="table-responsive">
+                <table class="stocks-table" border="0" cellpadding="8" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Food</th>
+                            <th>Food name</th>
+                            <th>Price (Ksh)</th>
+                            <th>Completed ✅</th>
+                            <th>Pending ⏳</th>
+                            <th>Units</th>
+                            <th>Adjust Units</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stocks-body">
+                        <tr id="loading-stocks">
+                            <td colspan="8" style="text-align:center;padding:20px;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading stocks...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Recent Orders (TOP) -->
+        <div class="orders-section">
+            <h2 style="margin:16px 0 20px; display:flex; align-items:center; gap:10px;">
+                <span style="font-size:1.5rem;">📋</span>
+                Recent Orders
+            </h2>
+            <div id="orders-list" class="orders-list">
+                <div style="text-align:center;padding:20px;color:#666;">
+                    <i class="fas fa-spinner fa-spin"></i> Loading orders...
+                </div>
+            </div>
+        </div>
+
+        <!-- Inagawa -->
+        <div class="section-divider"></div>
+
+
+
+    </main>
+
+    <!-- Login/Signup -->
+    <div id="login-modal" onclick="handleModalClick(event)" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:2000;align-items:center;justify-content:center;">
+      <div onclick="event.stopPropagation()" style="background:white;border-radius:16px;padding:32px;max-width:420px;width:90%;box-shadow:0 10px 40px rgba(0,0,0,0.2);position:relative;">
+        <button onclick="closeLoginModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#666;padding:4px 8px;">&times;</button>
+        
+        <h2 style="margin-bottom:8px;color:#1f2937;font-size:1.75rem;" id="modal-title">Login to Admin Panel</h2>
+        <p style="color:#666;margin-bottom:24px;font-size:0.95rem;">Manage stocks and orders</p>
+        
+        <div id="error-message" style="display:none;background:#fee2e2;color:#dc2626;padding:12px;border-radius:8px;margin-bottom:16px;font-size:0.9rem;"></div>
+        <div id="success-message" style="display:none;background:#dcfce7;color:#166534;padding:12px;border-radius:8px;margin-bottom:16px;font-size:0.9rem;"></div>
+        
+        <form id="auth-form" onsubmit="handleAuth(event)">
+          <div style="margin-bottom:20px;">
+            <label style="display:block;margin-bottom:8px;color:#374151;font-weight:600;font-size:0.9rem;">Email</label>
+            <input type="email" id="auth-email" required
+                   style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:8px;font-size:1rem;transition:border-color 0.2s;"
+                   placeholder="your@email.com">
+          </div>
+          
+          <div style="margin-bottom:20px;">
+            <label style="display:block;margin-bottom:8px;color:#374151;font-weight:600;font-size:0.9rem;">Password</label>
+            <input type="password" id="auth-password" required
+                   style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:8px;font-size:1rem;transition:border-color 0.2s;"
+                   placeholder="Enter password">
+          </div>
+          
+          <div id="confirm-password-section" style="margin-bottom:20px;display:none;">
+            <label style="display:block;margin-bottom:8px;color:#374151;font-weight:600;font-size:0.9rem;">Confirm Password</label>
+            <input type="password" id="auth-confirm-password"
+                   style="width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:8px;font-size:1rem;transition:border-color 0.2s;"
+                   placeholder="Confirm password">
+          </div>
+          
+          <button type="submit" id="auth-submit-btn"
+                  style="width:100%;padding:14px;background:#138808;color:white;border:none;border-radius:8px;font-weight:700;font-size:1rem;cursor:pointer;transition:background 0.2s;margin-bottom:16px;">
+            <span id="auth-submit-text">Login</span>
+          </button>
+        </form>
+        
+        <div style="text-align:center;padding-top:16px;border-top:1px solid #e5e7eb;">
+          <p style="color:#666;font-size:0.9rem;margin-bottom:8px;">
+            <span id="switch-text">Don't have an account?</span>
+          </p>
+          <button onclick="toggleAuthMode()" 
+                  style="background:none;border:none;color:#138808;font-weight:600;cursor:pointer;font-size:0.95rem;text-decoration:underline;">
+            <span id="switch-link">Sign Up</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="stocks.js"></script>
+</body>
+</html>
